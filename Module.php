@@ -30,8 +30,10 @@ class Module implements ConsoleUsageProviderInterface
     public function onBootstrap(MvcEvent $e)
     {
         // Initialize the audit manager by creating an instance of it
-        $sm = $e->getApplication()->getServiceManager();
-        $sm->get('auditManager');
+        // Commenting these out to avoid conflicts with zfcUser when this is run before the bootstrapSession method in
+        // The main Module.php. Put these two lines there instead.
+        //$sm = $e->getApplication()->getServiceManager();
+        //$sm->get('auditManager');
     }
 
     public function getConfig()
