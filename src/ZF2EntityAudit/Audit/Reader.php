@@ -265,14 +265,18 @@ class Reader
     {
         $query = "SELECT * FROM " . $this->config->getRevisionTableName() . " r WHERE r.id = ?";
         $revisionsData = $this->em->getConnection()->fetchAll($query, array($rev));
+        $userEntity = null;
+        if (!empty($revisionsData[0]['user_id'])) {
+            $userEntity = $this->ZfcUserRepository->find($revisionsData[0]['user_id']);
+        }
 
         if (count($revisionsData) == 1) {
             return new Revision(
                 $revisionsData[0]['id'],
                 \DateTime::createFromFormat($this->platform->getDateTimeFormatString(), $revisionsData[0]['timestamp']),
-                $this->ZfcUserRepository->find($revisionsData[0]['user_id'],
+                $userEntity,
                 $revisionsData[0]["note"],
-                $revisionsData[0]["ipaddress"])
+                $revisionsData[0]["ipaddress"]
             );
         } else {
             throw Exception::invalidRevision($rev);
@@ -320,11 +324,17 @@ class Reader
 
         $revisions = array();
         $this->platform = $this->em->getConnection()->getDatabasePlatform();
+
+        $userEntity = null;
+        if (!empty($row['user_id'])) {
+            $userEntity = $this->ZfcUserRepository->find($row['user_id']);
+        }
+
         foreach ($revisionsData AS $row) {
             $revisions[] = new Revision(
                 $row['id'],
                 \DateTime::createFromFormat($this->platform->getDateTimeFormatString(), $row['timestamp']),
-                $this->ZfcUserRepository->find($row['user_id']),
+                $userEntity,
                 $row["note"],
                 $row["ipaddress"]
             );

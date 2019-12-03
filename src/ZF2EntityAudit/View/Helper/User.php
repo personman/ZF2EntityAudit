@@ -22,6 +22,10 @@ class User extends AbstractHelper
     }
     public function __invoke($userId)
     {
+        if (!$userId) {
+            return '';
+        }
+
         $user = $this->em->getRepository($this->ZFcUserClassName)->find($userId);
         $html = '<div class="row">';
         $html .= '<div class="col-lg-8">';

@@ -61,7 +61,7 @@ $this->url('audit_compare',
                         </td>
                         <td>
                         <span class="label label-info">
-                            <?php echo  ($revision->getUser()->getEmail()) ?: 'Anonymous'; ?>
+                            <?php echo  (!empty($revision->getUser()) && $revision->getUser()->getEmail()) ?: 'Anonymous' ?>
                         </span>
                         </td>
 
